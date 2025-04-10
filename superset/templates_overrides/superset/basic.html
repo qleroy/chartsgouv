@@ -15,6 +15,7 @@ governing permissions and limitations under the License. #}
 %} {% set favicons = appbuilder.app.config['FAVICONS'] %}
 <html>
   <head>
+    {% include "head_custom_extra.html" %}
     <title>
       {% block title %} {% if title %} {{ title }} {% elif appbuilder and
       appbuilder.app_name %} {{ appbuilder.app_name }} {% endif %} {% endblock
@@ -27,67 +28,61 @@ governing permissions and limitations under the License. #}
     favicon.href.startswith("http") else assets_prefix }}{{favicon.href}}" > {%
     endfor %}
     <link
-      rel="stylesheet"
+      rel="preload"
       type="text/css"
       href="{{ assets_prefix }}/static/appbuilder/css/flags/flags16.css"
+      as="style"
     />
     <link
-      rel="stylesheet"
+      rel="preload"
       type="text/css"
       href="{{ assets_prefix }}/static/appbuilder/css/fontawesome/fontawesome.min.css"
+      as="style"
     />
     <link
-      rel="stylesheet"
-      type="text/css"
-      href="{{ assets_prefix }}/static/appbuilder/css/fontawesome/regular.min.css"
-    />
-    <link
-      rel="stylesheet"
+      rel="preload"
       type="text/css"
       href="{{ assets_prefix }}/static/appbuilder/css/fontawesome/solid.min.css"
+      as="style"
     />
     <link
-      rel="stylesheet"
+      rel="preload"
       type="text/css"
       href="{{ assets_prefix }}/static/appbuilder/css/fontawesome/brands.min.css"
+      as="style"
     />
     <link
-      rel="stylesheet"
-      type="text/css"
-      href="{{ assets_prefix }}/static/appbuilder/css/bootstrap-datepicker/bootstrap-datepicker3.min.css"
-    />
-    <link
-      rel="stylesheet"
+      rel="preload"
       type="text/css"
       href="{{ assets_prefix }}/static/appbuilder/css/select2/select2.min.css"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{{ assets_prefix }}/static/appbuilder/css/select2/select2-bootstrap.min.css"
+      as="style"
     />
 
     {{ css_bundle("theme") }} 
     <link
-      rel="stylesheet"
+      rel="preload"
       type="text/css"
       href="{{ assets_prefix }}/static/assets/dsfr/dsfr.min.css"
+      as="style"
     />
     <link
-      rel="stylesheet"
+      rel="preload"
       type="text/css"
       href="{{ assets_prefix }}/static/assets/dsfr/utility/utility.min.css"
+      as="style"
     />
     <link
-      rel="stylesheet"
+      rel="preload"
       type="text/css"
       href="{{ assets_prefix }}/static/assets/local/css/tail_css_custom_extra.css"
+      as="style"
     />
     <!--
     <link
-      rel="stylesheet"
+      rel="preload"
       type="text/css"
-      href="{{ assets_prefix }}/static/assets/dsfr-chart/dsfr-chart.css"
+      href="{{ assets_prefix }}/static/assets/dsfr-chart/DSFRChart.css"
+      as="style"
     />
     -->
     {% if entry %} {{ css_bundle(entry) }} {% endif %}
@@ -152,5 +147,16 @@ governing permissions and limitations under the License. #}
     {% block tail_js %} {% if not standalone_mode %} {{ js_bundle('menu') }} {%
     endif %} {% if entry %} {{ js_bundle(entry) }} {% endif %} {% include
     "tail_js_custom_extra.html" %} {% endblock %}
+
+    <!-- Handle deferred stylesheets -->
+    <script nonce="{{ macros.get_nonce() }}">
+      document.addEventListener('DOMContentLoaded', function() {
+        var preloadLinks = document.querySelectorAll('link[rel="preload"][as="style"]');
+
+        preloadLinks.forEach(function(link) {
+          link.rel = 'stylesheet';
+        });
+      });
+    </script>
   </body>
 </html>

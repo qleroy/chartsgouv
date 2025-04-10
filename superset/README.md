@@ -50,11 +50,11 @@ Pour une nouvelle installation, ne pas oublier de générer une `SUPERSET_SECRET
 export SUPERSET_SECRET_KEY="$(openssl rand -base64 42)"
 echo "$SUPERSET_SECRET_KEY" > .secret_key
 # Télécharger le DSFR
-wget https://github.com/GouvernementFR/dsfr/releases/download/v1.11.1/dsfr-v1.11.1.zip
-unzip dsfr-v1.11.1.zip -d dsfr
+wget https://github.com/GouvernementFR/dsfr/releases/download/v1.13.0/dsfr-v1.13.0.zip
+unzip dsfr-v1.13.0.zip -d dsfr
 # Optionnel: Télécharger DSFR-chart (en beta)
-# wget https://github.com/GouvernementFR/dsfr-chart/releases/download/v1.0.0/dsfr-chart-1.0.0.zip
-# unzip dsfr-chart-1.0.0.zip -d dsfr-chart
+# wget https://github.com/GouvernementFR/dsfr-chart/releases/download/v2.0.3/dsfr-chart-v2.0.3.zip
+# unzip dsfr-chart-v2.0.3.zip -d dsfr-chart
 git clone --single-branch https://github.com/numerique-gouv/chartsgouv
 cd superset/
 TAG=3.1.0 docker compose -f docker-compose-non-dev.yml up -d
@@ -63,10 +63,10 @@ TAG=3.1.0 docker compose -f docker-compose-non-dev.yml up -d
 
 ## Pas à pas
 
-Télécharger le [DSFR](https://github.com/GouvernementFR/dsfr) (fichiers compilés), ici la version v1.11.1 datée du 01/02/2024. Ces fichiers seront montés dans le container Superset sur le chemin `/app/superset/static/assets/dsfr`. Obligatoire pour inclure la police Marianne globalement. Ajoute aussi les icônes, pictogrammes:
+Télécharger le [DSFR](https://github.com/GouvernementFR/dsfr) (fichiers compilés), ici la version v1.13.0 datée du 04/12/2024. Ces fichiers seront montés dans le container Superset sur le chemin `/app/superset/static/assets/dsfr`. Obligatoire pour inclure la police Marianne globalement. Ajoute aussi les icônes, pictogrammes:
 ```bash
-wget https://github.com/GouvernementFR/dsfr/releases/download/v1.11.1/dsfr-v1.11.1.zip
-unzip dsfr-v1.11.1.zip -d dsfr
+wget https://github.com/GouvernementFR/dsfr/releases/download/v1.13.0/dsfr-v1.13.0.zip
+unzip dsfr-v1.13.0.zip -d dsfr
 # Le dossier dsfr/dist est monté dans le container superset_app:/app/superset/static/assets/dsfr
 # voir docker-compose-non-dev.yml
 # x-superset-volumes:
@@ -74,15 +74,15 @@ unzip dsfr-v1.11.1.zip -d dsfr
 #   - ./dsfr/dist:/app/superset/static/assets/dsfr
 ```
 
-Optionnel: Télécharger [DSFR-chart](https://github.com/GouvernementFR/dsfr-chart) (fichiers compilés), ici la version v1.0.0 datée du 29/11/2023. Ces fichiers seront montés dans le container Superset sur le chemin `/app/superset/static/assets/dsfr-chart`.
+Optionnel: Télécharger [DSFR-chart](https://github.com/GouvernementFR/dsfr-chart) (fichiers compilés), ici la version v2.0.3 datée du 18/02/2025. Ces fichiers seront montés dans le container Superset sur le chemin `/app/superset/static/assets/dsfr-chart`.
 ```bash
-wget https://github.com/GouvernementFR/dsfr-chart/releases/download/v1.0.0/dsfr-chart-1.0.0.zip
-unzip dsfr-chart-1.0.0.zip -d dsfr-chart
-# Le dossier dsfr-chart/Charts est monté dans le container superset_app:/app/superset/static/assets/dsfr-chart
+wget https://github.com/GouvernementFR/dsfr-chart/releases/download/v2.0.3/dsfr-chart-v2.0.3.zip
+unzip dsfr-chart-v2.0.3.zip -d dsfr-chart
+# Le dossier dsfr-chart/dist/DSFRChart est monté dans le container superset_app:/app/superset/static/assets/dsfr-chart
 # voir docker-compose-non-dev.yml
 # x-superset-volumes:
 #   &superset-volumes
-#   - ./dsfr-chart/Charts:/app/superset/static/assets/dsfr-chart
+#   - ./dsfr-chart/dist/DSFRChart:/app/superset/static/assets/dsfr-chart
 ```
 
 Cloner le dépôt ChartsGouv, seule la branche principale est nécessaire.
@@ -128,7 +128,7 @@ Le dépôt contient:
   - `./assets:/app/superset/static/assets/local` pour inclure [app_icon.png](assets/images/app_icon.png) et [tail_css_custom_extra.css](assets/css/tail_css_custom_extra.css), les pages d'erreur [404.html](assets/404.html) et [500.html](assets/500.html),
   - `./templates_overrides:/app/superset/templates_overrides` pour remplacer les templates [public_welcome.html](templates_overrides/superset/public_welcome.html), [base.html](templates_overrides/superset/base.html), [basic.html](templates_overrides/superset/basic.html) et [tail_js_custom_extra.html](templates_overrides/tail_js_custom_extra.html),
   - `./dsfr/dist:/app/superset/static/assets/dsfr` pour inclure [la police Marianne](https://www.systeme-de-design.gouv.fr/elements-d-interface/fondamentaux-de-l-identite-de-l-etat/typographie), [CSS et JS](https://www.systeme-de-design.gouv.fr/utilisation-et-organisation/developpeurs/prise-en-main), [icônes](https://www.systeme-de-design.gouv.fr/elements-d-interface/fondamentaux-techniques/icone) et [pictogrammes](https://www.systeme-de-design.gouv.fr/elements-d-interface/fondamentaux-techniques/pictogramme) du DSFR,
-  - `./dsfr-chart/Charts:/app/superset/static/assets/dsfr-chart` pour inclure [CSS et JS supplémentaires](https://github.com/GouvernementFR/dsfr-chart?tab=readme-ov-file#configuration-de-votre-projet) pour les DSFR-Chart,
+  - `./dsfr-chart/dist/DSFRChart:/app/superset/static/assets/dsfr-chart` pour inclure [CSS et JS supplémentaires](https://github.com/GouvernementFR/dsfr-chart?tab=readme-ov-file#configuration-de-votre-projet) pour les DSFR-Chart,
 - le script [docker/docker-dsfr.sh](docker/docker-dsfr.sh) pour remplacer certaines teintes de bleu spécifiques aux pages génériques FAB par le bleu France, compiler les fichiers de traduction FAB, déplacer individuellement les templates et pages 404 et 500 à l'emplacement approprié pour que le remplacement soit effectif,
 - le script [docker/docker-bootstrap.sh](docker/docker-bootstrap.sh#L38) modifié pour sourcer [docker/docker-dsfr.sh](docker/docker-dsfr.sh),
 - le fichier de configuration [docker/pythonpath_dev/superset_config_docker.py](docker/pythonpath_dev/superset_config_docker.py) qui inclut notamment: 
@@ -155,7 +155,7 @@ $ curl -s https://raw.githubusercontent.com/apache/superset/master/docker-compos
 >   - ./assets:/app/superset/static/assets/local
 >   - ./templates_overrides:/app/superset/templates_overrides
 >   - ./dsfr/dist:/app/superset/static/assets/dsfr
->  #- ./dsfr-chart/Charts:/app/superset/static/assets/dsfr-chart
+>  #- ./dsfr-chart/dist/DSFRChart:/app/superset/static/assets/dsfr-chart
 ```
 
 ### `docker-bootstrap.sh`
@@ -239,7 +239,7 @@ $ curl -s https://raw.githubusercontent.com/apache/superset/master/superset/temp
 >     <link
 >       rel="stylesheet"
 >       type="text/css"
->       href="{{ assets_prefix }}/static/assets/dsfr-chart/dsfr-chart.css"
+>       href="{{ assets_prefix }}/static/assets/dsfr-chart/DSFRChart.css"
 >     />
 >     -->
 131c152,166
@@ -265,7 +265,7 @@ $ curl -s https://raw.githubusercontent.com/apache/superset/master/superset/temp
 > <!--
 > <script
 >   defer
->     src="{{ assets_prefix }}/static/assets/dsfr-chart/dsfr-chart.umd.js">
+>     src="{{ assets_prefix }}/static/assets/dsfr-chart/DSFRChart.umd.cjs">
 > </script>
 > -->
 ```
